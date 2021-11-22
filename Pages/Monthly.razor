@@ -1,0 +1,70 @@
+@page "/monthly"
+
+<h3>Monthly</h3>
+
+<InputFile OnChange="@LoadFiles" multiple accept=".ofx" />
+<input type=month @bind='month' />
+
+<ul>
+    @foreach (MonthlyFile f in files)
+    {
+        <li>
+            <input type="checkbox" @bind="f.Selected" />            
+            "@f.File?.Name"
+        </li>
+    }
+</ul>
+
+<button class="btn btn-primary" @onclick="RemoveSelectedFiles">Remove</button>
+<button class="btn btn-primary" @onclick="Generate">Generate</button>
+
+@using System.IO
+@inject IJSRuntime JS
+
+@code {
+    private List<MonthlyFile> files = new();
+    private DateTime month = DateTime.Now.AddMonths(-1);
+    List<OutputRow> rows = new List<OutputRow>();
+
+    private void LoadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var item in e.GetMultipleFiles(100))
+        {
+            if(files.Find( x => x.File?.Name == item.Name) == null)
+                files.Add(new MonthlyFile() { File = item, Selected = false});
+        }
+    }
+        private void RemoveSelectedFiles()
+    {
+        foreach (var item in files.FindAll(x => x.Selected))
+            files.Remove(item);
+        this.StateHasChanged();
+    }
+    private async void Generate()
+    {
+        Text = string.Empty;
+        
+        foreach (var item in files)
+        {
+            if(await item.ReadOfxFile(month))
+            {
+                rows.AddRange(item.Rows);
+            }
+        }
+
+        rows.Sort(new OutputRowComp());
+        await SaveFile();
+
+        this.StateHasChanged();
+    }
+
+    [Parameter] public string Text { get; set; } = string.Empty;
+
+    private async Task SaveFile()
+    {
+        var excelBytes = ExcelService.GenerateExcelWorkbook(rows);        
+        var fileStream = new MemoryStream(excelBytes);
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        await JS.InvokeVoidAsync("downloadFileFromStream", $"test_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", streamRef);
+    }
+}

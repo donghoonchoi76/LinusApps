@@ -1,0 +1,86 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/donghoonchoi/Documents/project/blazor/linusapps/linusapps.csproj": {}
+  },
+  "projects": {
+    "/Users/donghoonchoi/Documents/project/blazor/linusapps/linusapps.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/donghoonchoi/Documents/project/blazor/linusapps/linusapps.csproj",
+        "projectName": "linusapps",
+        "projectPath": "/Users/donghoonchoi/Documents/project/blazor/linusapps/linusapps.csproj",
+        "packagesPath": "/Users/donghoonchoi/.nuget/packages/",
+        "outputPath": "/Users/donghoonchoi/Documents/project/blazor/linusapps/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/donghoonchoi/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.95.4, )"
+            },
+            "Microsoft.AspNetCore.Components.WebAssembly": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.AspNetCore.Components.WebAssembly.DevServer": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
+              "version": "[6.0.0, 6.0.0]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.100/RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "browser-wasm": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
