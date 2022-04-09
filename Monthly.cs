@@ -18,11 +18,11 @@ public class MonthlyFile
             start += (id.Length + 2);
             int end = text.IndexOf(string.Format("</{0}>", id), start);
             if (end < start)
-                end = text.IndexOf("\n", start);
+                end = Math.Max(start, Math.Min(text.IndexOf("<", start), text.IndexOf("\n", start)));
 
-            return text.Substring(start, end - start).Trim();
+            if(end > start)
+                return text.Substring(start, end - start).Trim();
         }
-
         return string.Empty;
     }
     public async Task<bool> ReadOfxFile(DateTime targetMonth)
