@@ -12,15 +12,18 @@ public class MonthlyFile
 
     private string GetText(string id, string text)
     {
-        int start = text.IndexOf(string.Format("<{0}>", id));
+        int start = text.IndexOf($"<{id}>");
         if (start >= 0)
         {
             start += (id.Length + 2);
-            int end = text.IndexOf(string.Format("</{0}>", id), start);
+            int end = text.IndexOf($"</{id}>", start);
             if (end < start)
-                end = Math.Max(start, Math.Min(text.IndexOf("<", start), text.IndexOf("\n", start)));
-
-            if(end > start)
+            {
+                end = text.IndexOf("<", start);
+                if(end < 1)
+                    end = text.Length-1;
+            }
+            if (end > start)
                 return text.Substring(start, end - start).Trim();
         }
         return string.Empty;
