@@ -12,7 +12,8 @@
             "type": "blazorwasm",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "browser": "chrome"
+            "browser": "chrome",
+            "url": "http://localhost:5113"
         } 
     ]
 }

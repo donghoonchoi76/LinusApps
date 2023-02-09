@@ -1,8 +1,32 @@
 @page "/vacations"
+@using BlazorStrap;
 
 <PageTitle>Vacations</PageTitle>
 
-<h1>Vacations</h1>
+<BSNav IsTabs="true">
+    <BSNavItem>
+        <TabLabel>Ramining Days</TabLabel>
+        <TabContent>
+            <div style="display:flex">
+    <div>
+        <span><h1>@remainingDays</h1></span>
+    </div>
+    <div>
+        <span><h3> days remaining</h3></span>
+    </div>
+</div>
+            
+            </TabContent>
+    </BSNavItem>
+    <BSNavItem>
+        <TabLabel>History</TabLabel>
+        <TabContent>
+            <input type="date" @bind="newStart"/>
+-
+<input type="date" @bind="newEnd"/>
+:
+<input type="text" @bind="newDescription"/>
+<button @onclick="AddVacation">Add</button>
 
 <ul>
     @foreach (var v in vacations)
@@ -17,13 +41,25 @@
         </li>
     }
 </ul>
+        </TabContent>
+    </BSNavItem>
+    <BSNavItem>
+        <TabLabel>Settings</TabLabel>
+        <TabContent>Link 2 Tab content</TabContent>
+    </BSNavItem>
+</BSNav>
 
-<input type="date" @bind="newStart"/>
--
-<input type="date" @bind="newEnd"/>
-:
-<input type="text" @bind="newDescription"/>
-<button @onclick="AddVacation">Add</button>
+
+
+
+
+
+
+
+
+
+
+
 
 @code {
     private List<Vacation> vacations = new();
@@ -31,6 +67,12 @@
     private DateTime newStart = DateTime.Now;
     private DateTime newEnd = DateTime.Now;
     string newDescription = string.Empty;
+
+    int remainingDays = 2;
+
+    int initialDays = 7;
+    int vacationPayPercent = 6;
+    DateTime workStartDate = DateTime.Now;
 
     private void AddVacation()
     {
