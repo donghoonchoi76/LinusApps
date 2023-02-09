@@ -1,70 +1,48 @@
 @page "/vacations"
 
-<h3>Vacations</h3>
+<PageTitle>Vacations</PageTitle>
 
-<InputFile OnChange="@LoadFiles" multiple accept=".ofx" />
-<input type=month @bind='month' />
+<h1>Vacations</h1>
 
 <ul>
-    @foreach (MonthlyFile f in files)
+    @foreach (var v in vacations)
     {
         <li>
-            <input type="checkbox" @bind="f.Selected" />            
-            "@f.File?.Name"
+            <input type="date" @bind="v.Start" />
+            -
+            <input type="date" @bind="v.End" />
+            :
+            <input type="text" @bind="v.Description" />
+            <button @onclick="() => DeleteVacation(v)" >Delete</button>
         </li>
     }
 </ul>
 
-<button class="btn btn-primary" @onclick="RemoveSelectedFiles">Remove</button>
-<button class="btn btn-primary" @onclick="Generate">Generate</button>
-
-@using System.IO
-@inject IJSRuntime JS
+<input type="date" @bind="newStart"/>
+-
+<input type="date" @bind="newEnd"/>
+:
+<input type="text" @bind="newDescription"/>
+<button @onclick="AddVacation">Add</button>
 
 @code {
-    private List<MonthlyFile> files = new();
-    private DateTime month = DateTime.Now.AddMonths(-1);
-    List<OutputRow> rows = new List<OutputRow>();
+    private List<Vacation> vacations = new();
 
-    private void LoadFiles(InputFileChangeEventArgs e)
-    {
-        foreach (var item in e.GetMultipleFiles(100))
-        {
-            if(files.Find( x => x.File?.Name == item.Name) == null)
-                files.Add(new MonthlyFile() { File = item, Selected = false});
-        }
-    }
-        private void RemoveSelectedFiles()
-    {
-        foreach (var item in files.FindAll(x => x.Selected))
-            files.Remove(item);
-        this.StateHasChanged();
-    }
-    private async void Generate()
-    {
-        Text = string.Empty;
-        
-        foreach (var item in files)
-        {
-            if(await item.ReadOfxFile(month))
-            {
-                rows.AddRange(item.Rows);
-            }
-        }
+    private DateTime newStart = DateTime.Now;
+    private DateTime newEnd = DateTime.Now;
+    string newDescription = string.Empty;
 
-        rows.Sort(new OutputRowComp());
-        await SaveFile();
-
-        this.StateHasChanged();
+    private void AddVacation()
+    {
+        vacations.Add(new Vacation() {
+            Start = DateTime.Now,
+            End = DateTime.Now,
+            Description = "휴식"
+        });
     }
 
-    [Parameter] public string Text { get; set; } = string.Empty;
-
-    private async Task SaveFile()
+    private void DeleteVacation(Vacation v)
     {
-        var excelBytes = ExcelService.GenerateExcelWorkbook(rows);        
-        var fileStream = new MemoryStream(excelBytes);
-        using var streamRef = new DotNetStreamReference(stream: fileStream);
-        await JS.InvokeVoidAsync("downloadFileFromStream", $"test_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", streamRef);
+        vacations.Remove(v);
     }
 }
