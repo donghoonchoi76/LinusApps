@@ -8,68 +8,93 @@
         <TabLabel>Ramining Days</TabLabel>
         <TabContent>
             <div style="display:flex">
-    <div>
-        <span><h1>@remainingDays</h1></span>
-    </div>
-    <div>
-        <span><h3> days remaining</h3></span>
-    </div>
-</div>
+                <div>
+                    <span><h1>@remainingDays</h1></span>
+                </div>
+                <div>
+                    <span><h3> days remaining</h3></span>
+                </div>
+            </div>
+            <div>
+                <ul>
             
-            </TabContent>
+                    @for(int i=0;i < nextVacations.Count;i++)
+                    {
+                        DateTime item = nextVacations[i];
+                        int days = i+remainingDays + 1;
+                        <li>
+                            @item.ToString("yyyy/MM/dd") @days Days
+                        </li>
+                    }
+                </ul>
+            </div>
+        </TabContent>
     </BSNavItem>
     <BSNavItem>
         <TabLabel>History</TabLabel>
         <TabContent>
-            <input type="date" @bind="newStart"/>
--
-<input type="date" @bind="newEnd"/>
-:
-<input type="text" @bind="newDescription"/>
-<button @onclick="AddVacation">Add</button>
-
-<ul>
-    @foreach (var v in vacations)
-    {
-        <li>
-            <input type="date" @bind="v.Start" />
-            -
-            <input type="date" @bind="v.End" />
-            :
-            <input type="text" @bind="v.Description" />
-            <button @onclick="() => DeleteVacation(v)" >Delete</button>
-        </li>
-    }
-</ul>
+            <BSTable IsBordered="false" IsBorderLess="false" IsCaptionTop="false" IsStriped="true">
+                <BSTHead>
+                    <BSTR>
+                        <BSTD>Start</BSTD>
+                        <BSTD>End</BSTD>
+                        <BSTD>Description</BSTD>
+                        <BSTD></BSTD>
+                    </BSTR>
+                </BSTHead>
+                <BSTBody>
+                    @foreach (var v in vacations)
+                    {
+                    <BSTR>
+                        <BSTD>@v.Start.ToString("yyyy/MM/dd")</BSTD>
+                        <BSTD>@v.End.ToString("yyyy/MM/dd")</BSTD>
+                        <BSTD>@v.Description</BSTD>
+                        <BSTD><button @onclick="() => DeleteVacation(v)" >Delete</button></BSTD>
+                    </BSTR>
+                    }
+                    <BSTR>
+                        <BSTD><input type="date" @bind="newStart"/></BSTD>
+                        <BSTD><input type="date" @bind="newEnd"/></BSTD>
+                        <BSTD><input type="text" @bind="newDescription"/></BSTD>
+                        <BSTD><button @onclick="AddVacation">Add</button></BSTD>
+                    </BSTR>
+                </BSTBody>
+            </BSTable>
         </TabContent>
     </BSNavItem>
     <BSNavItem>
         <TabLabel>Settings</TabLabel>
-        <TabContent>Link 2 Tab content</TabContent>
+        <TabContent>
+            <BSLabel>Initial Days</BSLabel>
+            <BSInputGroup MarginBottom="Margins.Medium">
+                <BSInput InputType="InputType.Number" @bind-Value="initialDays"/>
+                <span class="@BS.Input_Group_Text">Days</span>                
+            </BSInputGroup>
+            <BSLabel>Vacation Pay Percent</BSLabel>
+            <BSInputGroup MarginBottom="Margins.Medium">
+                <BSInput InputType="InputType.Number" @bind-Value="vacationPayPercent"/>
+                <span class="@BS.Input_Group_Text">%</span>                
+            </BSInputGroup>
+            <BSLabel>Work Start Date</BSLabel>
+            <BSInputGroup MarginBottom="Margins.Medium">
+                <BSInput InputType="InputType.Date" @bind-Value="workStartDate"/>  
+            </BSInputGroup>
+            <BSButton Color="BSColor.Dark" @onclick="SaveSettings">저장</BSButton>
+        
+        </TabContent>
     </BSNavItem>
 </BSNav>
 
-
-
-
-
-
-
-
-
-
-
-
-
 @code {
     private List<Vacation> vacations = new();
+    private List<DateTime> nextVacations = new();
 
     private DateTime newStart = DateTime.Now;
     private DateTime newEnd = DateTime.Now;
-    string newDescription = string.Empty;
+    string newDescription = "휴식";
 
     int remainingDays = 2;
-
+    
     int initialDays = 7;
     int vacationPayPercent = 6;
     DateTime workStartDate = DateTime.Now;
@@ -77,14 +102,33 @@
     private void AddVacation()
     {
         vacations.Add(new Vacation() {
-            Start = DateTime.Now,
-            End = DateTime.Now,
-            Description = "휴식"
+            Start = newStart,
+            End = newEnd,
+            Description = newDescription
         });
+
+        newStart = DateTime.Now;
+        newEnd = DateTime.Now;
+        newDescription = "휴식";
     }
 
     private void DeleteVacation(Vacation v)
     {
         vacations.Remove(v);
+    }
+
+    private void SaveSettings()
+    {
+        nextVacations.Clear();
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
+        nextVacations.Add(DateTime.Now);
     }
 }
