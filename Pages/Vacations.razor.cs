@@ -2,13 +2,13 @@
 namespace linusapps.Pages
 {
     public partial class Vacations {
+        private readonly int MaxFutureVacations = 10;
         private List<Vacation> history = new();
         private List<DateTime> nextVacations = new();
 
         private Vacation newVacation = new Vacation() { Start = DateTime.Now.Date, End = DateTime.Now.Date, Description="휴식"};
 
         private DateTime newEnd = DateTime.Now;
-        string newDescription = "휴식";
 
         int remainingDays = 0;
 
@@ -28,7 +28,7 @@ namespace linusapps.Pages
             nextVacations.Clear();
             DateTime now = DateTime.Now.Date;
             int curVDays = 0;
-            for(DateTime d = workStartDate; nextVacations.Count < 20; d = d.AddDays(1))
+            for(DateTime d = workStartDate; nextVacations.Count < MaxFutureVacations; d = d.AddDays(1))
             {
                 if(d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday)
                     days++;

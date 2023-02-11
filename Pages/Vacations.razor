@@ -7,27 +7,26 @@
     <BSNavItem>
         <TabLabel>Ramining Days</TabLabel>
         <TabContent>
-            <div style="display:flex">
-                <div>
-                    <span><h1>@remainingDays</h1></span>
-                </div>
-                <div>
-                    <span><h3> days remaining</h3></span>
-                </div>
-            </div>
-            <div>
-                <ul>
-            
-                    @for(int i=0;i < nextVacations.Count;i++)
-                    {
-                        DateTime item = nextVacations[i];
-                        int days = i+remainingDays + 1;
-                        <li>
-                            @days days on @item.ToString("yyyy/MM/dd")
-                        </li>
-                    }
-                </ul>
-            </div>
+            <BSContainer>
+            <BSRow Align="Align.Start" style="padding:20px;"/>
+                <BSRow Align="Align.Start">
+                    <BSCol Auto="true">
+                        <h1 style="display:inline;">@remainingDays&nbsp;</h1>
+                        <h3 style="display:inline;">days remaining</h3>
+                    </BSCol>
+                </BSRow>
+                <BSRow Align="Align.Start" style="padding:10px;"/>
+                @for(int i=0;i < nextVacations.Count;i++)
+                {
+                    DateTime item = nextVacations[i];
+                    int days = i+remainingDays + 1;
+                    <BSRow Align="Align.Start">
+                        <BSCol Column="4">
+                            <h4>@days days on @item.ToString("yyyy/MM/dd")</h4>
+                        </BSCol>
+                    </BSRow>
+                }
+            </BSContainer>
         </TabContent>
     </BSNavItem>
     <BSNavItem>
