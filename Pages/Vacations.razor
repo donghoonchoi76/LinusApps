@@ -23,7 +23,7 @@
                         DateTime item = nextVacations[i];
                         int days = i+remainingDays + 1;
                         <li>
-                            @item.ToString("yyyy/MM/dd") @days Days
+                            @days days on @item.ToString("yyyy/MM/dd")
                         </li>
                     }
                 </ul>
@@ -43,7 +43,7 @@
                     </BSTR>
                 </BSTHead>
                 <BSTBody>
-                    @foreach (var v in vacations)
+                    @foreach (var v in history)
                     {
                     <BSTR>
                         <BSTD>@v.Start.ToString("yyyy/MM/dd")</BSTD>

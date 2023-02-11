@@ -2,10 +2,10 @@
 namespace linusapps.Pages
 {
     public partial class Vacations {
-        private List<Vacation> vacations = new();
+        private List<Vacation> history = new();
         private List<DateTime> nextVacations = new();
 
-        private Vacation newVacation = new Vacation();
+        private Vacation newVacation = new Vacation() { Start = DateTime.Now.Date, End = DateTime.Now.Date, Description="휴식"};
 
         private DateTime newEnd = DateTime.Now;
         string newDescription = "휴식";
@@ -14,35 +14,54 @@ namespace linusapps.Pages
 
         int initialDays = 7;
         int vacationPayPercent = 6;
-        DateTime workStartDate = DateTime.Now;        
+        DateTime workStartDate = DateTime.Now.Date;        
 
-        protected override async Task OnInitializedAsync()
+        protected override Task OnInitializedAsync()
         {
             CalcCurrentDays();
-
-            //await Task.Run();
+            return Task.CompletedTask;
         }
 
         void CalcCurrentDays()
         {
-            remainingDays = 10;
-
+            int days = 0;
             nextVacations.Clear();
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
-            nextVacations.Add(DateTime.Now);
+            DateTime now = DateTime.Now.Date;
+            int curVDays = 0;
+            for(DateTime d = workStartDate; nextVacations.Count < 20; d = d.AddDays(1))
+            {
+                if(d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday)
+                    days++;
+
+                if(d == now) {
+                    curVDays = remainingDays = (days * vacationPayPercent) / 100;
+                }
+                else if( d > now)
+                {
+                    int vDays = (days * vacationPayPercent) / 100;
+                    if(vDays > curVDays)
+                    {
+                        curVDays = vDays;
+                        nextVacations.Add(d);
+                    }
+                }                
+            }
+
+            remainingDays += initialDays;
+
+            int totalUsed = 0;
+            foreach(var v in history) {
+                totalUsed += (v.End - v.Start).Days + 1;
+            }
+
+            remainingDays -= totalUsed;
         }
 
         private void AddVacation()
         {
-            vacations.Add(newVacation);
+            newVacation.Start = newVacation.Start.Date;
+            newVacation.End = newVacation.End.Date;
+            history.Add(newVacation);
             newVacation = new() {
                 Start = DateTime.Now,
                 End = DateTime.Now,
@@ -54,13 +73,14 @@ namespace linusapps.Pages
 
         private void DeleteVacation(Vacation v)
         {
-            vacations.Remove(v);
+            history.Remove(v);
 
             CalcCurrentDays();
         }
 
         private void SaveSettings()
         {
+            workStartDate = workStartDate.Date;
             CalcCurrentDays();            
         }
     }
@@ -71,4 +91,7 @@ namespace linusapps.Pages
         public DateTime End { get; set; }
         public string Description { get; set; } = string.Empty;
     }
+    
+
+
 }
