@@ -18,6 +18,11 @@ namespace linusapps.Pages
 
         protected override Task OnInitializedAsync()
         {
+            FirestoreDb db = FirestoreDb.Create("linusapps-599ad");
+            CollectionReference collection = db.Collection("history");
+
+
+
             CalcCurrentDays();
             return Task.CompletedTask;
         }
